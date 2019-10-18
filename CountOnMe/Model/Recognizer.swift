@@ -12,6 +12,7 @@ import UIKit
 public class Recognizer {
   
   var elements: [String] = []
+  var result: Int = 0
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
@@ -36,6 +37,27 @@ public class Recognizer {
   /// This functions is used to check if the expression entered by the user have an equal sign
   func expressionHaveResult(text: String) -> Bool {
     return text.firstIndex(of: "=") != nil
+  }
+  
+  func performOperation() {
+    var operationsToReduce = elements
+    
+    // Iterate over operations while an operand still here
+    while operationsToReduce.count > 1 {
+      let left = Int(operationsToReduce[0])!
+      let operand = operationsToReduce[1]
+      let right = Int(operationsToReduce[2])!
+      
+      switch operand {
+      case "+": result = left + right
+      case "-": result = left - right
+      default: fatalError("Unknown operator !")
+      }
+      
+      operationsToReduce = Array(operationsToReduce.dropFirst(3))
+      operationsToReduce.insert("\(result)", at: 0)
+      elements = operationsToReduce
+    }
   }
   
 }

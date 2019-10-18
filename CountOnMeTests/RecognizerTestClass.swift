@@ -26,7 +26,7 @@ class RecognizerTestClass: XCTestCase {
     
     reckon.fillElementWith(text: testString)
     
-    XCTAssert(reckon.elements.isEmpty == false)
+    XCTAssertFalse(reckon.elements.isEmpty)
   }
   
   func testGivenExpression_WhenExpressionGreaterOrEqualTo3_ThenExpressionIsTrue() {
@@ -34,7 +34,7 @@ class RecognizerTestClass: XCTestCase {
     
     reckon.fillElementWith(text: testString)
     
-    XCTAssert(reckon.expressionHaveEnoughElement == true)
+    XCTAssertTrue(reckon.expressionHaveEnoughElement)
   }
   
   func testGivenExpression_WhenExpressionLessThan3_ThenExpressionIsFalse() {
@@ -42,15 +42,23 @@ class RecognizerTestClass: XCTestCase {
     
     reckon.fillElementWith(text: testString)
     
-    XCTAssert(reckon.expressionHaveEnoughElement == false)
+    XCTAssertFalse(reckon.expressionHaveEnoughElement)
   }
   
-  func testGivenString_WhenCheckingLastElement_ThenElementIsNotPlus() {
+  func testGivenString_WhenLastElementIsNotPlusOrMinus_ThenElementIsValid() {
     let testString: String = "4 + 2"
     
     reckon.fillElementWith(text: testString)
     
-    XCTAssert(reckon.expressionIsCorrect)
+    XCTAssertTrue(reckon.expressionIsCorrect)
+  }
+  
+  func testGivenString_WhenLastElementIsPlusOrMinus_thenElementIsNotValid() {
+    let testString: String = "4 + 3 +"
+    
+    reckon.fillElementWith(text: testString)
+    
+    XCTAssertFalse(reckon.expressionIsCorrect)
   }
   
 }
