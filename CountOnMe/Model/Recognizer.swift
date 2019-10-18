@@ -7,29 +7,34 @@
 //
 
 import Foundation
+import UIKit
 
 public class Recognizer {
-  init() {}
   
-  var elements : [String] = []
+  var elements: [String] = []
   
+  /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
     return elements.last != "+" && elements.last != "-"
   }
   
+  /// This computed property is used to check the number of items in the elements array
   var expressionHaveEnoughElement: Bool {
     return elements.count >= 3
   }
   
+  /// This computed property is used to check if we can add an operand to the elements array
   var canAddOperator: Bool {
     return elements.last != "+" && elements.last != "-"
   }
   
-  func fillElementWith(text : String) {
+  /// This function is used to split the text in parameter and add it to the elements array
+  func fillElementWith(text: String) {
     elements = text.split(separator: " ").map { "\($0)" }
   }
   
-  func expressionHaveResult(text : String) -> Bool {
+  /// This functions is used to check if the expression entered by the user have an equal sign
+  func expressionHaveResult(text: String) -> Bool {
     return text.firstIndex(of: "=") != nil
   }
   

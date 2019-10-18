@@ -249,7 +249,7 @@
                                 <rect key="frame" x="10" y="44.000000000000014" width="355" height="243.33333333333337"/>
                                 <color key="backgroundColor" red="0.24527746819999999" green="0.53481305040000005" blue="0.58749136739999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="T2H-yn-nBB" secondAttribute="height" multiplier="375:257" id="vYx-v3-vdc"/>
+                                    <constraint firstAttribute="width" secondItem="T2H-yn-nBB" secondAttribute="height" multiplier="375:257" priority="900" id="vYx-v3-vdc"/>
                                 </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
@@ -284,6 +284,7 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="Jkl-sX-3IV"/>
+                                <exclude reference="QmI-p9-fPW"/>
                                 <exclude reference="UPX-H6-Jeu"/>
                                 <exclude reference="hYB-DR-301"/>
                                 <exclude reference="RVG-gJ-Zmx"/>
@@ -293,12 +294,12 @@
                                 <exclude reference="Tzf-xl-kZC"/>
                                 <exclude reference="aX2-dJ-rMg"/>
                                 <exclude reference="pdM-u4-aD5"/>
-                                <exclude reference="QmI-p9-fPW"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
                                 <include reference="Jkl-sX-3IV"/>
+                                <include reference="QmI-p9-fPW"/>
                                 <include reference="UPX-H6-Jeu"/>
                                 <include reference="hYB-DR-301"/>
                                 <include reference="RVG-gJ-Zmx"/>
@@ -308,7 +309,6 @@
                                 <include reference="Tzf-xl-kZC"/>
                                 <include reference="aX2-dJ-rMg"/>
                                 <include reference="pdM-u4-aD5"/>
-                                <include reference="QmI-p9-fPW"/>
                             </mask>
                         </variation>
                     </view>
