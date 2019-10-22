@@ -53,7 +53,8 @@ class ViewController: UIViewController {
     if reckon.canAddOperator {
       textView.text.append(" + ")
       updateReckon()
-    } else {
+    }
+    else {
       showAlertOperand()
     }
   }
@@ -62,7 +63,8 @@ class ViewController: UIViewController {
     if reckon.canAddOperator {
       textView.text.append(" - ")
       updateReckon()
-    } else {
+    }
+    else {
      showAlertOperand()
     }
   }
@@ -71,7 +73,18 @@ class ViewController: UIViewController {
     if reckon.canAddOperator {
       textView.text.append(" * ")
       updateReckon()
-    } else {
+    }
+    else {
+      showAlertOperand()
+    }
+  }
+  
+  @IBAction func tappedDivisionButton(_ sender: UIButton) {
+    if reckon.canAddOperator {
+      textView.text.append(" / ")
+      updateReckon()
+    }
+    else {
       showAlertOperand()
     }
   }
