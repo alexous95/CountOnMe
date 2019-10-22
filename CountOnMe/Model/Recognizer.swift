@@ -11,6 +11,8 @@ import UIKit
 
 public class Recognizer {
   
+  // MARK: - VARIABLES
+  
   var elements: [String] = []
   var result: Int = 0
   
@@ -29,6 +31,8 @@ public class Recognizer {
     return elements.last != "+" && elements.last != "-"
   }
   
+  // MARK: - FUNCTIONS
+  
   /// This function is used to split the text in parameter and add it to the elements array
   func fillElementWith(text: String) {
     elements = text.split(separator: " ").map { "\($0)" }
@@ -39,24 +43,60 @@ public class Recognizer {
     return text.firstIndex(of: "=") != nil
   }
   
+  /// This function is used to detect if a prioritary operand is present
+  func expressionPriority() -> (Int, Bool) {
+    var cmp = 0
+    for element in elements {
+      if element == "*" || element == "/" {
+        return (cmp, true)
+      }
+      cmp += 1
+    }
+    return (-1, false)
+  }
+  
   func performOperation() {
     var operationsToReduce = elements
     
     // Iterate over operations while an operand still here
     while operationsToReduce.count > 1 {
-      let left = Int(operationsToReduce[0])!
-      let operand = operationsToReduce[1]
-      let right = Int(operationsToReduce[2])!
+      let priorityOps = expressionPriority()
       
-      switch operand {
-      case "+": result = left + right
-      case "-": result = left - right
-      default: fatalError("Unknown operator !")
+      if priorityOps.1 {
+        let left = Int(operationsToReduce[priorityOps.0 - 1])!
+        let operand = operationsToReduce[priorityOps.0]
+        let right = Int(operationsToReduce[priorityOps.0 + 1])!
+        
+        switch operand {
+        case "*": result = left * right
+        case "/": result = left / right
+        default: fatalError("unknown operator")
+        }
+        
+        for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
+          operationsToReduce.remove(at: priorityOps.0 - 1)
+        }
+        
+        operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
+        elements = operationsToReduce
+      }
+        
+      else {
+        let left = Int(operationsToReduce[0])!
+        let operand = operationsToReduce[1]
+        let right = Int(operationsToReduce[2])!
+        
+        switch operand {
+        case "+": result = left + right
+        case "-": result = left - right
+        default: fatalError("Unknown operator !")
+        }
+        
+        operationsToReduce = Array(operationsToReduce.dropFirst(3))
+        operationsToReduce.insert("\(result)", at: 0)
+        elements = operationsToReduce
       }
       
-      operationsToReduce = Array(operationsToReduce.dropFirst(3))
-      operationsToReduce.insert("\(result)", at: 0)
-      elements = operationsToReduce
     }
   }
   

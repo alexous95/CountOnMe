@@ -61,4 +61,59 @@ class RecognizerTestClass: XCTestCase {
     XCTAssertFalse(reckon.expressionIsCorrect)
   }
   
+  func testGivenExpressionIs2Plus2_WhenAddingNumbers_ThenResultIs4() {
+    let testString: String = "2 + 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "4")
+  }
+  
+  func testGivenExpressionIs2minus2_WhenSubstractingNumbers_ThenResultIs0() {
+    let testString: String = "2 - 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "0")
+  }
+  
+  func testGivenExpressionIs2Plus2Plus2_WhenAddingNumbers_ThenResultIs6() {
+    let testString: String = "2 + 2 + 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "6")
+  }
+  
+  func testGivenExpression2Times2_WhenMultipliyingNumber_ThenResultIs4() {
+    let testString: String = "2 * 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "4")
+  }
+  
+  func testGivenExpression2Times2Plus3_WhenCalculating_ThenResultIs7() {
+    let testString: String = "2 * 2 + 3"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "7")
+    
+  }
+  
+  func testGivenExpression2Plus4Times4Plus3_WhenCalculating_ThenResultIs21() {
+    let testString: String = "2 + 4 * 4 + 3"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "21")
+  }
+  
 }

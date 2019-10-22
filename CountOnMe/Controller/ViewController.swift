@@ -10,10 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
   
+  // MARK: - OUTLET
+  
   @IBOutlet weak var textView: UITextView!
   @IBOutlet var numberButtons: [UIButton]!
   
   var reckon = Recognizer()
+  
+  // MARK: - VIEW LIFE CYCLE
   
   // View Life cycles
   override func viewDidLoad() {
@@ -21,10 +25,14 @@ class ViewController: UIViewController {
     updateReckon()
   }
   
+  // MARK: - PRIVATE FUNC
+  
   /// This function allows to update the string array from the model
   private func updateReckon() {
     reckon.fillElementWith(text: textView.text)
   }
+  
+  // MARK: - ACTIONS
   
   // View actions
   @IBAction func tappedNumberButton(_ sender: UIButton) {
@@ -46,7 +54,7 @@ class ViewController: UIViewController {
       textView.text.append(" + ")
       updateReckon()
     } else {
-      showAlert(whitTitle: "Zero", message: "Un operateur est deja mis", actionTitle: "OK")
+      showAlertOperand()
     }
   }
   
@@ -55,17 +63,26 @@ class ViewController: UIViewController {
       textView.text.append(" - ")
       updateReckon()
     } else {
-      showAlert(whitTitle: "Zero", message: "Un operateur est deja mis", actionTitle: "OK")
+     showAlertOperand()
+    }
+  }
+  
+  @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
+    if reckon.canAddOperator {
+      textView.text.append(" * ")
+      updateReckon()
+    } else {
+      showAlertOperand()
     }
   }
   
   @IBAction func tappedEqualButton(_ sender: UIButton) {
     guard reckon.expressionIsCorrect else {
-      return showAlert(whitTitle: "Zéro!", message: "Entrez une expression correct", actionTitle: "Ok")
+      return showAlertBadExpression()
     }
     
     guard reckon.expressionHaveEnoughElement else {
-      return showAlert(whitTitle: "Zéro!", message: "Demarrez un nouveau calcul", actionTitle: "Ok")
+      return showAlertNewOperation()
     }
     
     reckon.performOperation()
