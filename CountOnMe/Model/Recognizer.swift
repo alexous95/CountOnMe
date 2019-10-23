@@ -14,7 +14,7 @@ public class Recognizer {
   // MARK: - VARIABLES
   
   var elements: [String] = []
-  var result: Int = 0
+  var result: Douuble = 0.0
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
@@ -55,6 +55,7 @@ public class Recognizer {
     return (-1, false)
   }
   
+  /// This functions is used to perform the operation requested by the user
   func performOperation() {
     var operationsToReduce = elements
     
@@ -63,18 +64,23 @@ public class Recognizer {
       let priorityOps = expressionPriority()
       
       if priorityOps.1 {
-        let left = Int(operationsToReduce[priorityOps.0 - 1])!
+        let left = Double(operationsToReduce[priorityOps.0 - 1])!
         let operand = operationsToReduce[priorityOps.0]
-        let right = Int(operationsToReduce[priorityOps.0 + 1])!
+        let right = Double(operationsToReduce[priorityOps.0 + 1])!
         
         switch operand {
-        case "*": result = left * right
-        case "/": result = left / right
+        case "*":
+          result = left * right
+          for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
+            operationsToReduce.remove(at: priorityOps.0 - 1)
+          }
+        case "/":
+          result = left / right
+          for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
+            operationsToReduce.remove(at: priorityOps.0 - 1)
+          }
+          
         default: fatalError("unknown operator")
-        }
-        
-        for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
-          operationsToReduce.remove(at: priorityOps.0 - 1)
         }
         
         operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
