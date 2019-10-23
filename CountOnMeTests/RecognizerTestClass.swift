@@ -45,6 +45,20 @@ class RecognizerTestClass: XCTestCase {
     XCTAssertFalse(reckon.expressionHaveEnoughElement)
   }
   
+  func testGivenStringOne_WhenAddingOperator_ThenExpressionIsOnePlus() {
+    let testString = "1"
+    
+    reckon.fillElementWith(text: testString)
+    
+    XCTAssertTrue(reckon.canAddOperator)
+  }
+  
+  func testGivenOnePlusOneEqual_WhenChekingEqualOperator_ThenResultIsTrue() {
+    let testString = "1 + 1 ="
+    
+    XCTAssertTrue(reckon.expressionHaveResult(text: testString))
+  }
+  
   func testGivenString_WhenLastElementIsNotPlusOrMinus_ThenElementIsValid() {
     let testString: String = "4 + 2"
     
@@ -59,15 +73,6 @@ class RecognizerTestClass: XCTestCase {
     reckon.fillElementWith(text: testString)
     
     XCTAssertFalse(reckon.expressionIsCorrect)
-  }
-  
-  func testGivenExpressionIs2Plus2_WhenAddingNumbers_ThenResultIs4() {
-    let testString: String = "2 + 2"
-    
-    reckon.fillElementWith(text: testString)
-    reckon.performOperation()
-    
-    XCTAssert(reckon.elements[0] == "4")
   }
   
   func testGivenExpressionIs2minus2_WhenSubstractingNumbers_ThenResultIs0() {
@@ -97,14 +102,12 @@ class RecognizerTestClass: XCTestCase {
     XCTAssert(reckon.elements[0] == "4")
   }
   
-  func testGivenExpression2Times2Plus3_WhenCalculating_ThenResultIs7() {
-    let testString: String = "2 * 2 + 3"
+  func testGivenExpression2Plus2Time3_WhenCheckingPriority_ThenResultIsTrue3() {
+    let testString = "2 + 2 * 3"
     
     reckon.fillElementWith(text: testString)
-    reckon.performOperation()
     
-    XCTAssert(reckon.elements[0] == "7")
-    
+    XCTAssert(reckon.expressionPriority() == (3, true))
   }
   
   func testGivenExpression2Plus4Times4Plus3_WhenCalculating_ThenResultIs21() {

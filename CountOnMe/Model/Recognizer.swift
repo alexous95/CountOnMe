@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 
+/// This class is used to reckognize the elements choosen by the user and to do the operations requested by the user
 public class Recognizer {
   
   // MARK: - VARIABLES
@@ -79,9 +79,7 @@ public class Recognizer {
         
         operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
         elements = operationsToReduce
-      }
-        
-      else {
+      } else {
         let left = Int(operationsToReduce[0])!
         let operand = operationsToReduce[1]
         let right = Int(operationsToReduce[2])!
