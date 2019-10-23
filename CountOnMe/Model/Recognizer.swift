@@ -14,7 +14,7 @@ public class Recognizer {
   // MARK: - VARIABLES
   
   var elements: [String] = []
-  var result: Douuble = 0.0
+  var result: Double = 0
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
@@ -64,17 +64,18 @@ public class Recognizer {
       let priorityOps = expressionPriority()
       
       if priorityOps.1 {
-        let left = Double(operationsToReduce[priorityOps.0 - 1])!
         let operand = operationsToReduce[priorityOps.0]
-        let right = Double(operationsToReduce[priorityOps.0 + 1])!
-        
         switch operand {
         case "*":
+          let left = Double(operationsToReduce[priorityOps.0 - 1])!
+          let right = Double(operationsToReduce[priorityOps.0 + 1])!
           result = left * right
           for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
             operationsToReduce.remove(at: priorityOps.0 - 1)
           }
         case "/":
+          let left = Double(operationsToReduce[priorityOps.0 - 1])!
+          let right = Double(operationsToReduce[priorityOps.0 + 1])!
           result = left / right
           for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
             operationsToReduce.remove(at: priorityOps.0 - 1)
@@ -85,10 +86,11 @@ public class Recognizer {
         
         operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
         elements = operationsToReduce
+        
       } else {
-        let left = Int(operationsToReduce[0])!
+        let left = Double(operationsToReduce[0])!
         let operand = operationsToReduce[1]
-        let right = Int(operationsToReduce[2])!
+        let right = Double(operationsToReduce[2])!
         
         switch operand {
         case "+": result = left + right

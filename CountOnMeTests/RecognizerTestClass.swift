@@ -81,7 +81,7 @@ class RecognizerTestClass: XCTestCase {
     reckon.fillElementWith(text: testString)
     reckon.performOperation()
     
-    XCTAssert(reckon.elements[0] == "0")
+    XCTAssert(reckon.elements[0] == "0.0")
   }
   
   func testGivenExpressionIs2Plus2Plus2_WhenAddingNumbers_ThenResultIs6() {
@@ -90,7 +90,7 @@ class RecognizerTestClass: XCTestCase {
     reckon.fillElementWith(text: testString)
     reckon.performOperation()
     
-    XCTAssert(reckon.elements[0] == "6")
+    XCTAssert(reckon.elements[0] == "6.0")
   }
   
   func testGivenExpression2Times2_WhenMultipliyingNumber_ThenResultIs4() {
@@ -99,7 +99,7 @@ class RecognizerTestClass: XCTestCase {
     reckon.fillElementWith(text: testString)
     reckon.performOperation()
     
-    XCTAssert(reckon.elements[0] == "4")
+    XCTAssert(reckon.elements[0] == "4.0")
   }
   
   func testGivenExpression2Plus2Time3_WhenCheckingPriority_ThenResultIsTrue3() {
@@ -116,7 +116,7 @@ class RecognizerTestClass: XCTestCase {
     reckon.fillElementWith(text: testString)
     reckon.performOperation()
     
-    XCTAssert(reckon.elements[0] == "21")
+    XCTAssert(reckon.elements[0] == "21.0")
   }
   
 }
