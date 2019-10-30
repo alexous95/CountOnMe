@@ -50,39 +50,59 @@ class ViewController: UIViewController {
   }
   
   @IBAction func tappedAdditionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
+    if reckon.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    } else if reckon.canAddOperator {
       textView.text.append(" + ")
       updateReckon()
     } else {
       showAlertOperand()
     }
+
   }
   
   @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
+    if reckon.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    } else if reckon.canAddOperator {
       textView.text.append(" - ")
       updateReckon()
     } else {
-     showAlertOperand()
+      showAlertOperand()
     }
+    
   }
   
   @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
+    if reckon.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    } else if reckon.canAddOperator {
       textView.text.append(" * ")
       updateReckon()
     } else {
       showAlertOperand()
     }
+    
   }
   
   @IBAction func tappedDivisionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
+    if reckon.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    } else if reckon.canAddOperator {
       textView.text.append(" / ")
       updateReckon()
     } else {
       showAlertOperand()
     }
+    
   }
   
   @IBAction func tappedEqualButton(_ sender: UIButton) {

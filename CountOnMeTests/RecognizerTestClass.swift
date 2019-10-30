@@ -67,8 +67,32 @@ class RecognizerTestClass: XCTestCase {
     XCTAssertTrue(reckon.expressionIsCorrect)
   }
   
-  func testGivenString_WhenLastElementIsPlusOrMinus_thenElementIsNotValid() {
+  func testGivenString_WhenLastElementIsPlus_thenElementIsNotValid() {
     let testString: String = "4 + 3 +"
+    
+    reckon.fillElementWith(text: testString)
+    
+    XCTAssertFalse(reckon.expressionIsCorrect)
+  }
+  
+  func testGivenString_WhenLastElementIsMinus_thenElementIsNotValid() {
+    let testString: String = "4 + 3 -"
+    
+    reckon.fillElementWith(text: testString)
+    
+    XCTAssertFalse(reckon.expressionIsCorrect)
+  }
+  
+  func testGivenString_WhenLastElementIsMultiply_thenElementIsNotValid() {
+    let testString: String = "4 + 3 *"
+    
+    reckon.fillElementWith(text: testString)
+    
+    XCTAssertFalse(reckon.expressionIsCorrect)
+  }
+  
+  func testGivenString_WhenLastElementIsDivide_thenElementIsNotValid() {
+    let testString: String = "4 + 3 /"
     
     reckon.fillElementWith(text: testString)
     

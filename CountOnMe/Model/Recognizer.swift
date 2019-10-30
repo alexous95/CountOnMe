@@ -18,7 +18,7 @@ public class Recognizer {
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
-    return elements.last != "+" && elements.last != "-"
+    return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
   }
   
   /// This computed property is used to check the number of items in the elements array
@@ -28,7 +28,7 @@ public class Recognizer {
   
   /// This computed property is used to check if we can add an operand to the elements array
   var canAddOperator: Bool {
-    return elements.last != "+" && elements.last != "-"
+    return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
   }
   
   // MARK: - FUNCTIONS
@@ -64,26 +64,20 @@ public class Recognizer {
       let priorityOps = expressionPriority()
       
       if priorityOps.1 {
+        let left = Double(operationsToReduce[priorityOps.0 - 1])!
         let operand = operationsToReduce[priorityOps.0]
+        let right = Double(operationsToReduce[priorityOps.0 + 1])!
         switch operand {
         case "*":
-          let left = Double(operationsToReduce[priorityOps.0 - 1])!
-          let right = Double(operationsToReduce[priorityOps.0 + 1])!
           result = left * right
-          for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
-            operationsToReduce.remove(at: priorityOps.0 - 1)
-          }
         case "/":
-          let left = Double(operationsToReduce[priorityOps.0 - 1])!
-          let right = Double(operationsToReduce[priorityOps.0 + 1])!
           result = left / right
-          for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
-            operationsToReduce.remove(at: priorityOps.0 - 1)
-          }
-          
         default: fatalError("unknown operator")
         }
         
+        for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
+          operationsToReduce.remove(at: priorityOps.0 - 1)
+        }
         operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
         elements = operationsToReduce
         
