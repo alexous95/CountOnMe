@@ -34,7 +34,7 @@ class ViewController: UIViewController {
   
   // MARK: - ACTIONS
   
-  // View actions
+  /// This actions is called when a number button is pressed. It is used to update the textView and the model
   @IBAction func tappedNumberButton(_ sender: UIButton) {
     guard let numberText = sender.title(for: .normal) else {
       return
@@ -49,6 +49,7 @@ class ViewController: UIViewController {
     updateReckon()
   }
   
+  /// This action is called when
   @IBAction func tappedAdditionButton(_ sender: UIButton) {
     if reckon.expressionHaveResult(text: textView.text) {
       showAlertNewOperation()

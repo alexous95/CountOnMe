@@ -33,17 +33,17 @@ public class Recognizer {
   
   // MARK: - FUNCTIONS
   
-  /// This function is used to split the text in parameter and add it to the elements array
+  /// This method is used to split the text in parameter and add it to the elements array
   func fillElementWith(text: String) {
     elements = text.split(separator: " ").map { "\($0)" }
   }
   
-  /// This functions is used to check if the expression entered by the user have an equal sign
+  /// This method is used to check if the expression entered by the user have an equal sign
   func expressionHaveResult(text: String) -> Bool {
     return text.firstIndex(of: "=") != nil
   }
   
-  /// This function is used to detect if a prioritary operand is present
+  /// This method is used to detect if a prioritary operand is present
   func expressionPriority() -> (Int, Bool) {
     var cmp = 0
     for element in elements {
@@ -55,7 +55,7 @@ public class Recognizer {
     return (-1, false)
   }
   
-  /// This functions is used to perform the operation requested by the user
+  /// This method is used to perform the operation requested by the user
   func performOperation() {
     var operationsToReduce = elements
     
@@ -63,6 +63,7 @@ public class Recognizer {
     while operationsToReduce.count > 1 {
       let priorityOps = expressionPriority()
       
+      // Case where there is a multiplication sign or division sign
       if priorityOps.1 {
         let left = Double(operationsToReduce[priorityOps.0 - 1])!
         let operand = operationsToReduce[priorityOps.0]
