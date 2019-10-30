@@ -14,6 +14,7 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var textView: UITextView!
   @IBOutlet var numberButtons: [UIButton]!
+  @IBOutlet var operatorButtons : [UIButton]!
   
   var reckon = Recognizer()
   
@@ -48,6 +49,19 @@ class ViewController: UIViewController {
     textView.text.append(numberText)
     updateReckon()
   }
+  
+  @IBAction func tappedOperatorButton(_ sender: UIButton) {
+    guard let operatorText = sender.title(for: .normal) else {
+      return
+    }
+    if reckon.canAddOperator {
+      textView.text.append(" \(operatorText) ")
+      updateReckon()
+    } else {
+      showAlertOperand()
+    }
+  }
+  
   
   @IBAction func tappedAdditionButton(_ sender: UIButton) {
     if reckon.canAddOperator {

@@ -20,6 +20,7 @@ extension UIViewController {
     present(alertController, animated: true, completion: nil)
   }
   
+  /// This method is used to present an AlertController when an operand is already choosen
   func showAlertOperand() {
     let alertController = UIAlertController(title: "Zéro!", message: "Un operateur est deja mis", preferredStyle: .alert)
     let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
@@ -28,6 +29,7 @@ extension UIViewController {
     present(alertController, animated: true, completion: nil)
   }
   
+  /// This method is used to present an AlertController when an expression is not correct
   func showAlertBadExpression() {
     let alertController = UIAlertController(title: "Zéro!", message: "Entrez une expression correct", preferredStyle: .alert)
     let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
@@ -36,6 +38,7 @@ extension UIViewController {
     present(alertController, animated: true, completion: nil)
   }
   
+  /// This method is used to present an AlertController when there is no expression
   func showAlertNewOperation() {
     let alertController = UIAlertController(title: "Zéro!", message: "Demarrez un nouveau calcul", preferredStyle: .alert)
     let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
