@@ -50,40 +50,16 @@ class ViewController: UIViewController {
     updateReckon()
   }
   
-  /// This action is called when
-  @IBAction func tappedAdditionButton(_ sender: UIButton) {
-    if reckon.expressionHaveResult(text: textView.text) {
-      showAlertNewOperation()
-      textView.text = ""
-      updateReckon()
-    } else if reckon.canAddOperator {
-      textView.text.append(" + ")
-      updateReckon()
-    } else {
-      showAlertOperand()
-    }
-
-  }
-  
-  @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-    if reckon.expressionHaveResult(text: textView.text) {
-      showAlertNewOperation()
-      textView.text = ""
-      updateReckon()
-    } else if reckon.canAddOperator {
-      textView.text.append(" - ")
-      updateReckon()
-    } else {
-      showAlertOperand()
-    }
-    
-  }
-  
+  /// This action is called when an operator buttons is pressed
   @IBAction func tappedOperatorButton(_ sender: UIButton) {
     guard let operatorText = sender.title(for: .normal) else {
       return
     }
-    if reckon.canAddOperator {
+    if reckon.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    } else if reckon.canAddOperator {
       textView.text.append(" \(operatorText) ")
       updateReckon()
     } else {
@@ -92,6 +68,7 @@ class ViewController: UIViewController {
     
   }
     
+  /// This action is called when the equal button is pressed
   @IBAction func tappedEqualButton(_ sender: UIButton) {
     guard reckon.expressionIsCorrect else {
       return showAlertBadExpression()
