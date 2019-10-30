@@ -14,7 +14,7 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var textView: UITextView!
   @IBOutlet var numberButtons: [UIButton]!
-  @IBOutlet var operatorButtons : [UIButton]!
+  @IBOutlet var operatorButtons: [UIButton]!
   
   var reckon = Recognizer()
   
@@ -61,44 +61,7 @@ class ViewController: UIViewController {
       showAlertOperand()
     }
   }
-  
-  
-  @IBAction func tappedAdditionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
-      textView.text.append(" + ")
-      updateReckon()
-    } else {
-      showAlertOperand()
-    }
-  }
-  
-  @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
-      textView.text.append(" - ")
-      updateReckon()
-    } else {
-     showAlertOperand()
-    }
-  }
-  
-  @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
-      textView.text.append(" * ")
-      updateReckon()
-    } else {
-      showAlertOperand()
-    }
-  }
-  
-  @IBAction func tappedDivisionButton(_ sender: UIButton) {
-    if reckon.canAddOperator {
-      textView.text.append(" / ")
-      updateReckon()
-    } else {
-      showAlertOperand()
-    }
-  }
-  
+    
   @IBAction func tappedEqualButton(_ sender: UIButton) {
     guard reckon.expressionIsCorrect else {
       return showAlertBadExpression()
