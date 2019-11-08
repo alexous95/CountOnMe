@@ -14,7 +14,8 @@ public class Recognizer {
   // MARK: - VARIABLES
   
   var elements: [String] = []
-  var result: Double = 0
+  private var result: Double = 0
+  private var dividedByZero: Bool = false
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
@@ -43,7 +44,7 @@ public class Recognizer {
     return text.firstIndex(of: "=") != nil
   }
   
-  /// This method is used to detect if a prioritary operand is present
+  /// This method is used to detect if a prioritary operand is present and return a tuple with the position of the priotary operand and true
   func expressionPriority() -> (Int, Bool) {
     var cmp = 0
     for element in elements {
@@ -53,6 +54,13 @@ public class Recognizer {
       cmp += 1
     }
     return (-1, false)
+  }
+  
+  func checkDivByZero(rightOperand: Double) -> Bool {
+    if rightOperand == 0.0 {
+      return true
+    }
+    return false
   }
   
   /// This method is used to perform the operation requested by the user
@@ -72,6 +80,9 @@ public class Recognizer {
         case "*":
           result = left * right
         case "/":
+          if checkDivByZero(rightOperand: right) {
+            dividedByZero = true
+          }
           result = left / right
         default: fatalError("unknown operator")
         }
@@ -79,8 +90,16 @@ public class Recognizer {
         for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
           operationsToReduce.remove(at: priorityOps.0 - 1)
         }
-        operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
-        elements = operationsToReduce
+        
+        if !dividedByZero {
+          operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
+          elements = operationsToReduce
+        } else {
+          operationsToReduce = []
+          operationsToReduce.insert("Not a number", at: 0)
+          elements = operationsToReduce
+          dividedByZero = false
+        }
         
       } else {
         let left = Double(operationsToReduce[0])!
@@ -101,4 +120,15 @@ public class Recognizer {
     }
   }
   
+  func deleteLastElement() {
+    if !elements.isEmpty {
+      elements.removeLast()
+    }
+  }
+  
+  func deleteAllElements() {
+    if !elements.isEmpty {
+      elements.removeAll()
+    }
+  }
 }

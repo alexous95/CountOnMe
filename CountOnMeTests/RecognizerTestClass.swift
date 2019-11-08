@@ -17,10 +17,6 @@ class RecognizerTestClass: XCTestCase {
     reckon = Recognizer()
   }
   
-  func testGivenNullInstance_WhenInstanceCreated_ThenInstanceNotNull() {
-    XCTAssertNotNil(reckon)
-  }
-  
   func testGivenEmptyElements_WhenStringAdded_ThenElementNotEmpty() {
     let testString = "1 + 1"
     
@@ -143,4 +139,39 @@ class RecognizerTestClass: XCTestCase {
     XCTAssert(reckon.elements[0] == "21.0")
   }
   
+  func testGivenExpression2Divided0_WhenCalculating_ThenResultIsNotANumber() {
+    let testString = "2 / 0"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.performOperation()
+    
+    XCTAssert(reckon.elements[0] == "Not a number")
+  }
+  
+  func testGivenExpression2Plus2_WhenDeletingLastElement_ThenResulIs2Plus() {
+    let testString = "2 - 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.deleteLastElement()
+    
+    XCTAssert(reckon.elements == ["2", "-"])
+  }
+  
+  func testGivenExpression2Plus2_WhenDeletingAndAdding4_ThenResultIs2Plus4() {
+    let testString = "2 + 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.deleteLastElement()
+    reckon.elements.append("4")
+    XCTAssert(reckon.elements == ["2", "+", "4"])
+  }
+  
+  func testGivenExpression2Plus2_WhenDeletingAllElement_ThenResulIsEmpty() {
+    let testString = "2 + 2"
+    
+    reckon.fillElementWith(text: testString)
+    reckon.deleteAllElements()
+    
+    XCTAssert(reckon.elements.isEmpty)
+  }
 }

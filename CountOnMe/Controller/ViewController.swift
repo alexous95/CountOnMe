@@ -15,6 +15,7 @@ class ViewController: UIViewController {
   @IBOutlet weak var textView: UITextView!
   @IBOutlet var numberButtons: [UIButton]!
   @IBOutlet var operatorButtons: [UIButton]!
+  @IBOutlet var deleteButton: UIButton!
   
   var reckon = Recognizer()
   
@@ -23,6 +24,8 @@ class ViewController: UIViewController {
   // View Life cycles
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    textView.isEditable = false
     updateReckon()
   }
   
@@ -46,7 +49,7 @@ class ViewController: UIViewController {
       updateReckon()
     }
     
-    textView.text.append(numberText)
+    textView.text.append("\(numberText)")
     updateReckon()
   }
   
@@ -55,6 +58,7 @@ class ViewController: UIViewController {
     guard let operatorText = sender.title(for: .normal) else {
       return
     }
+    
     if reckon.expressionHaveResult(text: textView.text) {
       showAlertNewOperation()
       textView.text = ""
@@ -82,4 +86,18 @@ class ViewController: UIViewController {
     textView.text.append(" = \(reckon.elements.first!)")
   }
   
+  @IBAction func tappedDeleteButton(_ sender: UIButton) {
+    reckon.deleteLastElement()
+    // The joined method allow us to create a String from an array of String using the separator we want between each string
+    textView.text = reckon.elements.joined(separator: " ")
+    textView.text.append(" ")
+    updateReckon()
+  }
+  
+  // MARK: - OBJC METHODES
+  @IBAction func multipleTapDeleteButton() {
+    reckon.deleteAllElements()
+    textView.text = ""
+    updateReckon()
+  }
 }

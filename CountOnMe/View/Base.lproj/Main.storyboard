@@ -20,7 +20,7 @@
                                 <rect key="frame" x="10" y="307.33333333333337" width="355" height="363.33333333333337"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="U2a-5D-kgc">
-                                        <rect key="frame" x="0.0" y="0.0" width="95.666666666666671" height="248"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="95.666666666666671" height="335.66666666666669"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Raa-av-x4n">
                                                 <rect key="frame" x="0.0" y="0.0" width="95.666666666666671" height="72.666666666666671"/>
@@ -53,6 +53,18 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="tappedNumberButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="Ovc-Qq-WYV"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AzY-vb-6SV">
+                                                <rect key="frame" x="0.0" y="263.00000000000006" width="95.666666666666671" height="72.666666666666686"/>
+                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                                <state key="normal" title="X">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="longTapDeleteButton" destination="eqK-jh-KKu" eventType="touchDownRepeat" id="V3N-cR-3Y0"/>
+                                                    <action selector="tappedDeleteButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="8VV-wY-ex4"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -342,6 +354,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="deleteButton" destination="AzY-vb-6SV" id="h0W-as-cpD"/>
                         <outlet property="textView" destination="T2H-yn-nBB" id="yqe-Yo-Sag"/>
                         <outletCollection property="numberButtons" destination="YD6-ul-r3f" collectionClass="NSMutableArray" id="c8W-uL-ZHg"/>
                         <outletCollection property="numberButtons" destination="Raa-av-x4n" collectionClass="NSMutableArray" id="P52-Zx-bMS"/>
@@ -362,7 +375,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7XP-3c-sJZ" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="87" y="220"/>
+            <point key="canvasLocation" x="-182" y="113"/>
         </scene>
     </scenes>
 </document>
