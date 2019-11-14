@@ -112,8 +112,7 @@ class ViewController: UIViewController {
       updateReckon()
     }
     
-    if calculator.canAddOperator {
-      
-    }
+    textView.text.append("\(decimalText)")
+    updateReckon()
   }
 }
