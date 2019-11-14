@@ -1,5 +1,5 @@
 //
-//  Recognizer.swift
+//  Calculator.swift
 //  CountOnMe
 //
 //  Created by Alexandre Goncalves on 14/10/2019.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// This class is used to reckognize the elements choosen by the user and to do the operations requested by the user
-public class Recognizer {
+public class Calculator {
   
   // MARK: - VARIABLES
   
@@ -45,15 +45,15 @@ public class Recognizer {
   }
   
   /// This method is used to detect if a prioritary operand is present and return a tuple with the position of the priotary operand and true
-  func expressionPriority() -> (Int, Bool) {
+  func expressionPriority() -> (position: Int, isPresent: Bool) {
     var cmp = 0
     for element in elements {
       if element == "*" || element == "/" {
-        return (cmp, true)
+        return (position: cmp, isPresent: true)
       }
       cmp += 1
     }
-    return (-1, false)
+    return (position: -1, isPresent: false)
   }
   
   func checkDivByZero(rightOperand: Double) -> Bool {
@@ -72,10 +72,10 @@ public class Recognizer {
       let priorityOps = expressionPriority()
       
       // Case where there is a multiplication sign or division sign
-      if priorityOps.1 {
-        let left = Double(operationsToReduce[priorityOps.0 - 1])!
-        let operand = operationsToReduce[priorityOps.0]
-        let right = Double(operationsToReduce[priorityOps.0 + 1])!
+      if priorityOps.isPresent {
+        let left = Double(operationsToReduce[priorityOps.position - 1])!
+        let operand = operationsToReduce[priorityOps.position]
+        let right = Double(operationsToReduce[priorityOps.position + 1])!
         switch operand {
         case "*":
           result = left * right
@@ -87,12 +87,12 @@ public class Recognizer {
         default: fatalError("unknown operator")
         }
         
-        for _ in priorityOps.0 - 1...priorityOps.0 + 1 {
-          operationsToReduce.remove(at: priorityOps.0 - 1)
+        for _ in priorityOps.position - 1...priorityOps.position + 1 {
+          operationsToReduce.remove(at: priorityOps.position - 1)
         }
         
         if !dividedByZero {
-          operationsToReduce.insert("\(result)", at: priorityOps.0 - 1)
+          operationsToReduce.insert("\(result)", at: priorityOps.position - 1)
           elements = operationsToReduce
         } else {
           operationsToReduce = []

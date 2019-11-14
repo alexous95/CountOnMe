@@ -16,8 +16,9 @@ class ViewController: UIViewController {
   @IBOutlet var numberButtons: [UIButton]!
   @IBOutlet var operatorButtons: [UIButton]!
   @IBOutlet var deleteButton: UIButton!
+  @IBOutlet var decimalButton: UIButton!
   
-  var reckon = Recognizer()
+  var calculator = Calculator()
   
   // MARK: - VIEW LIFE CYCLE
   
@@ -33,7 +34,7 @@ class ViewController: UIViewController {
   
   /// This function allows to update the string array from the model
   private func updateReckon() {
-    reckon.fillElementWith(text: textView.text)
+    calculator.fillElementWith(text: textView.text)
   }
   
   // MARK: - ACTIONS
@@ -44,7 +45,7 @@ class ViewController: UIViewController {
       return
     }
     
-    if reckon.expressionHaveResult(text: textView.text) {
+    if calculator.expressionHaveResult(text: textView.text) {
       textView.text = ""
       updateReckon()
     }
@@ -59,11 +60,11 @@ class ViewController: UIViewController {
       return
     }
     
-    if reckon.expressionHaveResult(text: textView.text) {
+    if calculator.expressionHaveResult(text: textView.text) {
       showAlertNewOperation()
       textView.text = ""
       updateReckon()
-    } else if reckon.canAddOperator {
+    } else if calculator.canAddOperator {
       textView.text.append(" \(operatorText) ")
       updateReckon()
     } else {
@@ -74,30 +75,45 @@ class ViewController: UIViewController {
     
   /// This action is called when the equal button is pressed
   @IBAction func tappedEqualButton(_ sender: UIButton) {
-    guard reckon.expressionIsCorrect else {
+    guard calculator.expressionIsCorrect else {
       return showAlertBadExpression()
     }
     
-    guard reckon.expressionHaveEnoughElement else {
+    guard calculator.expressionHaveEnoughElement else {
       return showAlertNewOperation()
     }
     
-    reckon.performOperation()
-    textView.text.append(" = \(reckon.elements.first!)")
+    calculator.performOperation()
+    textView.text.append(" = \(calculator.elements.first!)")
   }
   
   @IBAction func tappedDeleteButton(_ sender: UIButton) {
-    reckon.deleteLastElement()
+    calculator.deleteLastElement()
     // The joined method allow us to create a String from an array of String using the separator we want between each string
-    textView.text = reckon.elements.joined(separator: " ")
+    textView.text = calculator.elements.joined(separator: " ")
     textView.text.append(" ")
     updateReckon()
   }
   
-  // MARK: - OBJC METHODES
   @IBAction func multipleTapDeleteButton() {
-    reckon.deleteAllElements()
+    calculator.deleteAllElements()
     textView.text = ""
     updateReckon()
+  }
+  
+  @IBAction func decimalButtonTapped(_ sender: UIButton) {
+    guard let decimalText = sender.title(for: .normal) else {
+      return
+    }
+    
+    if calculator.expressionHaveResult(text: textView.text) {
+      showAlertNewOperation()
+      textView.text = ""
+      updateReckon()
+    }
+    
+    if calculator.canAddOperator {
+      
+    }
   }
 }
