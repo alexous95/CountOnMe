@@ -73,9 +73,9 @@ public class Calculator {
       
       // Case where there is a multiplication sign or division sign
       if priorityOps.isPresent {
-        let left = Double(operationsToReduce[priorityOps.position - 1])!
+        guard let left = Double(operationsToReduce[priorityOps.position - 1]) else { fatalError("Not a number") }
         let operand = operationsToReduce[priorityOps.position]
-        let right = Double(operationsToReduce[priorityOps.position + 1])!
+        guard let right = Double(operationsToReduce[priorityOps.position + 1]) else { fatalError("Not a number") }
         switch operand {
         case "*":
           result = left * right
@@ -102,9 +102,9 @@ public class Calculator {
         }
         
       } else {
-        let left = Double(operationsToReduce[0])!
+        guard let left = Double(operationsToReduce[0]) else { fatalError("Not a valid number") }
         let operand = operationsToReduce[1]
-        let right = Double(operationsToReduce[2])!
+        guard let right = Double(operationsToReduce[2]) else { fatalError("Not a valid number") }
         
         switch operand {
         case "+": result = left + right
