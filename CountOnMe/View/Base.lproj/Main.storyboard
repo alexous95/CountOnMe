@@ -63,7 +63,7 @@
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="longTapDeleteButton" destination="eqK-jh-KKu" eventType="touchDownRepeat" id="V3N-cR-3Y0"/>
+                                                    <action selector="multipleTapDeleteButton" destination="eqK-jh-KKu" eventType="touchDownRepeat" id="QEJ-sC-vJr"/>
                                                     <action selector="tappedDeleteButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="8VV-wY-ex4"/>
                                                 </connections>
                                             </button>
@@ -175,7 +175,7 @@
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="tappedNumberButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="F4a-4Z-b3u"/>
+                                                    <action selector="decimalButtonTapped:" destination="eqK-jh-KKu" eventType="touchUpInside" id="oXh-iL-pDN"/>
                                                 </connections>
                                             </button>
                                         </subviews>

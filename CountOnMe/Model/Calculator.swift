@@ -9,22 +9,26 @@
 import Foundation
 
 /// This class is used to reckognize the elements choosen by the user and to do the operations requested by the user
-public class Calculator {
+public final class Calculator {
   
   // MARK: - VARIABLES
   
   var elements: [String] = []
   private var result: Double = 0
   private var dividedByZero: Bool = false
+  let minElement = 3
   
   /// This computed property is used to check if the last element of the elements array is an operand
   var expressionIsCorrect: Bool {
-    return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
+    return elements.last != "+" &&
+      elements.last != "-" &&
+      elements.last != "*" &&
+      elements.last != "/"
   }
   
   /// This computed property is used to check the number of items in the elements array
   var expressionHaveEnoughElement: Bool {
-    return elements.count >= 3
+    return elements.count >= minElement
   }
   
   /// This computed property is used to check if we can add an operand to the elements array
@@ -56,7 +60,7 @@ public class Calculator {
     return (position: -1, isPresent: false)
   }
   
-  func checkDivByZero(rightOperand: Double) -> Bool {
+  private func checkDivByZero(rightOperand: Double) -> Bool {
     if rightOperand == 0.0 {
       return true
     }
@@ -73,9 +77,9 @@ public class Calculator {
       
       // Case where there is a multiplication sign or division sign
       if priorityOps.isPresent {
-        guard let left = Double(operationsToReduce[priorityOps.position - 1]) else { fatalError("Not a number") }
+        guard let left = Double(operationsToReduce[priorityOps.position - 1]) else { return }
         let operand = operationsToReduce[priorityOps.position]
-        guard let right = Double(operationsToReduce[priorityOps.position + 1]) else { fatalError("Not a number") }
+        guard let right = Double(operationsToReduce[priorityOps.position + 1]) else { return }
         switch operand {
         case "*":
           result = left * right
@@ -84,7 +88,7 @@ public class Calculator {
             dividedByZero = true
           }
           result = left / right
-        default: fatalError("unknown operator")
+        default: return
         }
         
         for _ in priorityOps.position - 1...priorityOps.position + 1 {
@@ -102,14 +106,14 @@ public class Calculator {
         }
         
       } else {
-        guard let left = Double(operationsToReduce[0]) else { fatalError("Not a valid number") }
+        guard let left = Double(operationsToReduce[0]) else { return }
         let operand = operationsToReduce[1]
-        guard let right = Double(operationsToReduce[2]) else { fatalError("Not a valid number") }
+        guard let right = Double(operationsToReduce[2]) else { return }
         
         switch operand {
         case "+": result = left + right
         case "-": result = left - right
-        default: fatalError("Unknown operator !")
+        default: return
         }
         
         operationsToReduce = Array(operationsToReduce.dropFirst(3))

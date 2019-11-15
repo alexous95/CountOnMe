@@ -184,4 +184,14 @@ class CalculatorTestClass: XCTestCase {
     
     XCTAssert(calculator.elements[0] == "Not a number")
   }
+  
+  func testGivenExpression2DividedBy2_WhenCalculating_ThenResultIsOne() {
+    let testString = "2 / 2"
+    
+    calculator.fillElementWith(text: testString)
+    
+    calculator.performOperation()
+    
+    XCTAssert(calculator.elements[0] == "1.0")
+  }
 }
