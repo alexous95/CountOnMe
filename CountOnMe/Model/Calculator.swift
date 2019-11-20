@@ -13,12 +13,19 @@ public final class Calculator {
   
   // MARK: - VARIABLES
   
+  /// An array that will contain our operations
   var elements: [String] = []
-  private var result: Double = 0
-  private var dividedByZero: Bool = false
-  let minElement = 3
   
-  /// This computed property is used to check if the last element of the elements array is an operand
+  /// A variable that is used to store the result of the different operations
+  private var result: Double = 0
+  
+  /// A variable that is used to check if there is a division by zero
+  private var dividedByZero: Bool = false
+  
+  /// Constant that represents the minimum number for an operation to be correct
+  private let minElement = 3
+  
+  /// Check if the last element of the elements array is an operator
   var expressionIsCorrect: Bool {
     return elements.last != "+" &&
       elements.last != "-" &&
@@ -26,12 +33,12 @@ public final class Calculator {
       elements.last != "/"
   }
   
-  /// This computed property is used to check the number of items in the elements array
+  /// Check the number of items in the elements array
   var expressionHaveEnoughElement: Bool {
     return elements.count >= minElement
   }
   
-  /// This computed property is used to check if we can add an operand to the elements array
+  /// Check if we can add an operand to the elements array
   var canAddOperator: Bool {
     return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
   }
@@ -39,16 +46,23 @@ public final class Calculator {
   // MARK: - FUNCTIONS
   
   /// This method is used to split the text in parameter and add it to the elements array
+  ///
+  /// - parameter text: A string wich contains our operation
   func fillElementWith(text: String) {
     elements = text.split(separator: " ").map { "\($0)" }
   }
   
   /// This method is used to check if the expression entered by the user have an equal sign
+  ///
+  /// - parameter text: A string wich contains our operation
+  /// - returns: ' True ' if the expression have an equal sign
   func expressionHaveResult(text: String) -> Bool {
     return text.firstIndex(of: "=") != nil
   }
   
-  /// This method is used to detect if a prioritary operand is present and return a tuple with the position of the priotary operand and true
+  /// Check if there is a prioritary operator
+  ///
+  /// - Returns: A tuple with `True` and the position of the prioritary operator if there is a multiply or divide operator. Returns `False` and -1 if there is no prioritary expression
   func expressionPriority() -> (position: Int, isPresent: Bool) {
     var cmp = 0
     for element in elements {
@@ -60,11 +74,71 @@ public final class Calculator {
     return (position: -1, isPresent: false)
   }
   
+  /// Check if there is a division by 0
+  ///
+  /// - Parameter rightOperand: The denominator of the division
+  ///
+  /// - Returns: `True` if the denominator is equal to 0
   private func checkDivByZero(rightOperand: Double) -> Bool {
     if rightOperand == 0.0 {
       return true
     }
     return false
+  }
+  
+  /// Perform a multiplication from the specified arguments
+  ///
+  /// - Parameters:
+  ///   - operationArray: The array that is used to store the operation we want to perform
+  ///   - position: The position of the priority operand
+  ///
+  /// - Returns: An array with the result at index position - 1 and the remaining operation if there are any
+  private func performMultiplication(operationArray: [String], position: Int) -> [String] {
+    var newArray = operationArray
+    guard let left = Double(newArray[position - 1]) else { return [] }
+    guard let right = Double(newArray[position + 1]) else { return [] }
+    
+    result = left * right
+    
+    for _ in position - 1...position + 1 {
+      newArray.remove(at: position - 1)
+    }
+    
+    newArray.insert("\(result)", at: position - 1)
+    
+    return newArray
+  }
+  
+  /// Perform a division from the specified arguments
+  ///
+  /// - Parameters:
+  ///   - operationArray: The array that is used to store the operation we want to perform
+  ///   - position: The position of the priority operand
+  ///
+  /// - Returns: An array with the result at index position - 1 and the remaining operation if there are any. If there is a divison by zero the result is "Not a number"
+  private func performDivision(operationArray: [String], position: Int) -> [String] {
+    var newArray = operationArray
+    guard let left = Double(newArray[position - 1]) else { return [] }
+    guard let right = Double(newArray[position + 1]) else { return [] }
+    
+    if checkDivByZero(rightOperand: right) {
+      dividedByZero = true
+    }
+    result = left / right
+    
+    for _ in position - 1...position + 1 {
+      newArray.remove(at: position - 1)
+    }
+    
+    if dividedByZero == true {
+      newArray = []
+      newArray.insert("Not a number", at: 0)
+      dividedByZero = false
+    } else {
+      newArray.insert("\(result)", at: position - 1)
+    }
+    
+    return newArray
   }
   
   /// This method is used to perform the operation requested by the user
@@ -77,33 +151,17 @@ public final class Calculator {
       
       // Case where there is a multiplication sign or division sign
       if priorityOps.isPresent {
-        guard let left = Double(operationsToReduce[priorityOps.position - 1]) else { return }
         let operand = operationsToReduce[priorityOps.position]
-        guard let right = Double(operationsToReduce[priorityOps.position + 1]) else { return }
+        
         switch operand {
         case "*":
-          result = left * right
+          operationsToReduce = performMultiplication(operationArray: operationsToReduce, position: priorityOps.position)
         case "/":
-          if checkDivByZero(rightOperand: right) {
-            dividedByZero = true
-          }
-          result = left / right
+          operationsToReduce = performDivision(operationArray: operationsToReduce, position: priorityOps.position)
         default: return
         }
         
-        for _ in priorityOps.position - 1...priorityOps.position + 1 {
-          operationsToReduce.remove(at: priorityOps.position - 1)
-        }
-        
-        if !dividedByZero {
-          operationsToReduce.insert("\(result)", at: priorityOps.position - 1)
-          elements = operationsToReduce
-        } else {
-          operationsToReduce = []
-          operationsToReduce.insert("Not a number", at: 0)
-          elements = operationsToReduce
-          dividedByZero = false
-        }
+        elements = operationsToReduce
         
       } else {
         guard let left = Double(operationsToReduce[0]) else { return }
@@ -120,15 +178,16 @@ public final class Calculator {
         operationsToReduce.insert("\(result)", at: 0)
         elements = operationsToReduce
       }
-      
     }
   }
   
+  /// Delete the last element of the array
   func deleteLastElement() {
     if !elements.isEmpty {
       elements.removeLast()
     }
   }
+  
   
   func deleteAllElements() {
     if !elements.isEmpty {
