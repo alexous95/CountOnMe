@@ -188,7 +188,6 @@ public final class Calculator {
     }
   }
   
-  
   func deleteAllElements() {
     if !elements.isEmpty {
       elements.removeAll()

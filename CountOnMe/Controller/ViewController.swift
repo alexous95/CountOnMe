@@ -18,6 +18,7 @@ class ViewController: UIViewController {
   @IBOutlet var deleteButton: UIButton!
   @IBOutlet var decimalButton: UIButton!
   
+  /// An instance of our model which manage the data 
   var calculator = Calculator()
   
   // MARK: - VIEW LIFE CYCLE
@@ -27,12 +28,11 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     textView.isEditable = false
-    updateReckon()
   }
   
   // MARK: - PRIVATE FUNC
   
-  /// This function allows to update the string array from the model
+  /// Update the string array from the model
   private func updateReckon() {
     calculator.fillElementWith(text: textView.text)
   }
@@ -40,6 +40,8 @@ class ViewController: UIViewController {
   // MARK: - ACTIONS
   
   /// This actions is called when a number button is pressed. It is used to update the textView and the model
+  ///
+  /// - Parameter sender: The button that is pressed when the action is trigerred
   @IBAction func tappedNumberButton(_ sender: UIButton) {
     guard let numberText = sender.title(for: .normal) else {
       return
@@ -55,6 +57,8 @@ class ViewController: UIViewController {
   }
   
   /// This action is called when an operator buttons is pressed
+  ///
+  /// - Parameter sender: The button that is pressed when the action is trigerred
   @IBAction func tappedOperatorButton(_ sender: UIButton) {
     guard let operatorText = sender.title(for: .normal) else {
       return
@@ -74,6 +78,8 @@ class ViewController: UIViewController {
   }
     
   /// This action is called when the equal button is pressed
+  ///
+  /// - Parameter sender: The button that is pressed when the action is trigerred
   @IBAction func tappedEqualButton(_ sender: UIButton) {
     guard calculator.expressionIsCorrect else {
       return showAlertBadExpression()
@@ -87,6 +93,9 @@ class ViewController: UIViewController {
     textView.text.append(" = \(calculator.elements.first!)")
   }
   
+  /// This action is called when the delete button is pressed
+  ///
+  /// - Parameter sender: The button that is pressed when the action is trigerred
   @IBAction func tappedDeleteButton(_ sender: UIButton) {
     calculator.deleteLastElement()
     // The joined method allow us to create a String from an array of String using the separator we want between each string
@@ -95,12 +104,16 @@ class ViewController: UIViewController {
     updateReckon()
   }
   
+  /// This action is called when the delete button is pressed
   @IBAction func multipleTapDeleteButton() {
     calculator.deleteAllElements()
     textView.text = ""
     updateReckon()
   }
   
+  /// This action is called when the decimal button is pressed
+  ///
+  /// - Parameter sender: The button that is pressed when the action is trigerred
   @IBAction func decimalButtonTapped(_ sender: UIButton) {
     guard let decimalText = sender.title(for: .normal) else {
       return
