@@ -16,24 +16,17 @@ final class Calculator {
     /// An array that will contain our operations
     var elements: [String] = []
     
+    /// This variable is used to communicate with our controller
     weak var delegate: ShowAlertDelegate?
     
     /// A variable that is used to store the result of the different operations
     private var result: Double = 0
     
-    /// A variable that is used to check if there is a division by zero
-    private var dividedByZero: Bool = false
-    
     /// Constant that represents the minimum number for an operation to be correct
     private let minElement = 3
     
-    /// Check if the last element of the elements array is an operator
-    var expressionIsCorrect: Bool {
-        return elements.last != "+" &&
-            elements.last != "-" &&
-            elements.last != "*" &&
-            elements.last != "/"
-    }
+    /// A variable that represents if the user is writting a decimal number or not
+    private var isDecimal = false
     
     /// Check the number of items in the elements array
     var expressionHaveEnoughElement: Bool {
@@ -43,6 +36,22 @@ final class Calculator {
     /// Check if we can add an operand to the elements array
     var canAddOperator: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
+    }
+    
+    func canAddDecimal(array: [String]) -> Bool {
+        if let last = array.last {
+            for chara in last where chara == "." {
+                return false
+            }
+        }
+        return true
+    }
+    
+    func canAddMinus(newOperator: String ) -> Bool {
+        if newOperator == "-" {
+            return true
+        }
+        return elements.last != "+" && elements.last != "*" && elements.last != "/"
     }
     
     // MARK: - FUNCTIONS
@@ -58,133 +67,96 @@ final class Calculator {
     ///
     /// - parameter text: A string wich contains our operation
     /// - returns: ' True ' if the expression have an equal sign
-    func expressionHaveResult(text: String) -> Bool {
+    private func expressionHaveResult(text: String) -> Bool {
         return text.firstIndex(of: "=") != nil
     }
     
-    /// Check if there is a prioritary operator
-    ///
-    /// - Returns: A tuple with `True` and the position of the prioritary operator if there is a multiply or divide operator. Returns `False` and -1 if there is no prioritary expression
-    func expressionPriority() -> (position: Int, isPresent: Bool) {
-        var cmp = 0
-        for element in elements {
-            if element == "*" || element == "/" {
-                return (position: cmp, isPresent: true)
-            }
-            cmp += 1
-        }
-        return (position: -1, isPresent: false)
-    }
-    
-    /// Check if there is a division by 0
-    ///
-    /// - Parameter rightOperand: The denominator of the division
-    ///
-    /// - Returns: `True` if the denominator is equal to 0
-    private func checkDivByZero(rightOperand: Double) -> Bool {
-        if rightOperand == 0.0 {
-            return true
-        }
-        return false
-    }
-    
-    /// Perform a multiplication from the specified arguments
-    ///
-    /// - Parameters:
-    ///   - operationArray: The array that is used to store the operation we want to perform
-    ///   - position: The position of the priority operand
-    ///
-    /// - Returns: An array with the result at index position - 1 and the remaining operation if there are any
-    private func performMultiplication(operationArray: [String], position: Int) -> [String] {
-        var newArray = operationArray
-        guard let left = Double(newArray[position - 1]) else { return [] }
-        guard let right = Double(newArray[position + 1]) else { return [] }
-        
-        result = left * right
-        
-        for _ in position - 1...position + 1 {
-            newArray.remove(at: position - 1)
-        }
-        
-        newArray.insert("\(result)", at: position - 1)
-        
-        return newArray
-    }
-    
-    /// Perform a division from the specified arguments
-    ///
-    /// - Parameters:
-    ///   - operationArray: The array that is used to store the operation we want to perform
-    ///   - position: The position of the priority operand
-    ///
-    /// - Returns: An array with the result at index position - 1 and the remaining operation if there are any. If there is a divison by zero the result is "Not a number"
-    private func performDivision(operationArray: [String], position: Int) -> [String] {
-        var newArray = operationArray
-        guard let left = Double(newArray[position - 1]) else { return [] }
-        guard let right = Double(newArray[position + 1]) else { return [] }
-        
-        if checkDivByZero(rightOperand: right) {
-            dividedByZero = true
-        }
-        result = left / right
-        
-        for _ in position - 1...position + 1 {
-            newArray.remove(at: position - 1)
-        }
-        
-        if dividedByZero == true {
-            newArray = []
-            newArray.insert("Not a number", at: 0)
-            dividedByZero = false
+    func addNumber(number: String) {
+        if expressionHaveResult(text: elements.joined(separator: " ")) {
+            delegate?.showAlert(title: "Zero!", message: "Start a new Operation")
+            delegate?.resetTextView()
+            elements = []
+        } else if isDecimal == false {
+            delegate?.updateTextViewWith(text: "\(number)")
+            elements.append(number)
         } else {
-            newArray.insert("\(result)", at: position - 1)
+            if let last = elements.last {
+                elements[elements.count - 1] = last + number
+                delegate?.updateTextViewWith(text: "\(number)")
+            }
         }
-        
+    }
+    
+    func addDecimal(decimalText: String) {
+        if expressionHaveResult(text: elements.joined(separator: " ")) {
+            delegate?.showAlert(title: "Zero!", message: "Start a new operation")
+            delegate?.resetTextView()
+            elements = []
+        } else if canAddDecimal(array: elements) == false {
+            delegate?.showAlert(title: "Zero", message: "There is already a dot")
+        } else {
+            isDecimal = !isDecimal
+            delegate?.updateTextViewWith(text: "\(decimalText)")
+            if let last = elements.last {
+                elements[elements.count - 1] = last + decimalText
+            }
+        }
+    }
+    
+    func addOperator(newOperator: String) {
+        if expressionHaveResult(text: elements.joined(separator: " ")) {
+            delegate?.showAlert(title: "Zero!", message: "Start a new operation")
+            delegate?.resetTextView()
+            elements = []
+        } else if canAddMinus(newOperator: newOperator) {
+            isDecimal = !isDecimal
+            delegate?.updateTextViewWith(text: " \(newOperator) ")
+            elements.append(newOperator)
+        } else {
+            delegate?.showAlert(title: "Zero!", message: "There is already an operator")
+        }
+    }
+    
+    private func convertElementArray(array: [String]) -> [String] {
+        var newArray = [String]()
+        for element in array {
+            if let decimal = Double(element) {
+                newArray.append("\(decimal)")
+            } else {
+                newArray.append(element)
+            }
+        }
         return newArray
     }
     
     /// This method is used to perform the operation requested by the user
-    func performOperation() {
-        var operationsToReduce = elements
+    private func performOperation() {
+        let newElements = convertElementArray(array: elements)
+        let newExpression = newElements.joined(separator: " ")
+        let expression = NSExpression(format: newExpression)
         
-        // Iterate over operations while an operand still here
-        while operationsToReduce.count > 1 {
-            let priorityOps = expressionPriority()
-            
-            // Case where there is a multiplication sign or division sign
-            if priorityOps.isPresent {
-                let operand = operationsToReduce[priorityOps.position]
-                
-                switch operand {
-                case "*":
-                    operationsToReduce = performMultiplication(operationArray: operationsToReduce, position: priorityOps.position)
-                case "/":
-                    operationsToReduce = performDivision(operationArray: operationsToReduce, position: priorityOps.position)
-                default: return
-                }
-                
-                elements = operationsToReduce
-                
-            } else {
-                guard let left = Double(operationsToReduce[0]) else { return }
-                let operand = operationsToReduce[1]
-                guard let right = Double(operationsToReduce[2]) else { return }
-                
-                switch operand {
-                case "+": result = left + right
-                case "-": result = left - right
-                default: return
-                }
-                
-                operationsToReduce = Array(operationsToReduce.dropFirst(3))
-                operationsToReduce.insert("\(result)", at: 0)
-                elements = operationsToReduce
-            }
-        }
+        guard let resultat = expression.expressionValue(with: nil, context: nil) as? Double else { return }
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 3
+        guard let value = formatter.string(from: NSNumber(value: resultat)) else { return }
+        elements = []
+        elements.insert(value, at: 0)
+        
     }
     
-    func transferAlert(title: String, message: String) {
-        delegate.showAlert(title: title, message: message)
+    func addEqual() {
+        if canAddOperator == false {
+            delegate?.showAlert(title: "Zero!", message: "Expression is not correct")
+        } else if expressionHaveEnoughElement == false {
+            delegate?.showAlert(title: "Zero!", message: "Expression is not correct")
+        } else {
+            performOperation()
+            if let first = elements.first {
+                delegate?.updateTextViewWith(text: " = \(first)")
+            }
+            isDecimal = false
+        }
     }
     
     /// Delete the last element of the array

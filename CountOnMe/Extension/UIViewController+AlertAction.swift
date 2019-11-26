@@ -12,7 +12,7 @@ import UIKit
 extension UIViewController {
     
     /// This method is used to present an AlertController whith custom messages and title
-    func showAlert(title: String, message: String){
+    func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(action)
