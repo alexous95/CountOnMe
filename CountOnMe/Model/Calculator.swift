@@ -29,16 +29,22 @@ final class Calculator {
     private var isDecimal = false
     
     /// Check the number of items in the elements array
-    var expressionHaveEnoughElement: Bool {
+    private var expressionHaveEnoughElement: Bool {
         return elements.count >= minElement
     }
     
     /// Check if we can add an operand to the elements array
-    var canAddOperator: Bool {
+    private var canAddOperator: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
     }
     
-    func canAddDecimal(array: [String]) -> Bool {
+    // MARK: - PRIVATE FUNCTIONS
+    
+    /// This method is used to check if we can add another dot for a decimal number
+    ///
+    /// - parameter array: An array of string wich contains our current operation
+    /// - returns: `True` if we can add a decimal, `False` otherwise
+    private func canAddDecimal(array: [String]) -> Bool {
         if let last = array.last {
             for chara in last where chara == "." {
                 return false
@@ -47,20 +53,15 @@ final class Calculator {
         return true
     }
     
-    func canAddMinus(newOperator: String ) -> Bool {
+    /// This method is used to check if we can add a minus sign in our operation
+    ///
+    /// - parameter newOperator: The sign we  want to add to the expression
+    /// - returns: `True` if the sign is a minus or if we can add an operator
+    private func canAddMinus(newOperator: String ) -> Bool {
         if newOperator == "-" {
             return true
         }
         return elements.last != "+" && elements.last != "*" && elements.last != "/"
-    }
-    
-    // MARK: - FUNCTIONS
-    
-    /// This method is used to split the text in parameter and add it to the elements array
-    ///
-    /// - parameter text: A string wich contains our operation
-    func fillElementWith(text: String) {
-        elements = text.split(separator: " ").map { "\($0)" }
     }
     
     /// This method is used to check if the expression entered by the user have an equal sign
@@ -71,6 +72,50 @@ final class Calculator {
         return text.firstIndex(of: "=") != nil
     }
     
+    /// This method is used to convert our number in the string array into double. With this method we avoid he fact that the NSExpression returns only Int result even when working with divisions
+    ///
+    /// - parameter array: The array wich contains our expression
+    /// - returns: An array with double number instead of Int numbers
+    private func convertElementArray(array: [String]) -> [String] {
+        var newArray = [String]()
+        for element in array {
+            if let decimal = Double(element) {
+                newArray.append("\(decimal)")
+            } else {
+                newArray.append(element)
+            }
+        }
+        return newArray
+    }
+    
+    /// Perform the operation requested by the user
+    private func performOperation() {
+        let newElements = convertElementArray(array: elements)
+        let newExpression = newElements.joined(separator: " ")
+        let expression = NSExpression(format: newExpression)
+        
+        guard let resultat = expression.expressionValue(with: nil, context: nil) as? Double else { return }
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 3
+        guard let value = formatter.string(from: NSNumber(value: resultat)) else { return }
+        elements = []
+        elements.insert(value, at: 0)
+        
+    }
+    
+    // - MARK: FUNCTIONS
+    
+    /// This method is used to split the text in parameter and add it to the elements array
+    ///
+    /// - parameter text: A string wich contains our operation
+    func fillElementWith(text: String) {
+        elements = text.split(separator: " ").map { "\($0)" }
+    }
+    
+    /// Add a number to the expression if possible, otherwise notify the controller to show an alert
+    ///
+    /// - parameter number: The number to add
     func addNumber(number: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new Operation")
@@ -87,6 +132,9 @@ final class Calculator {
         }
     }
     
+    /// Add a dot to the expression if possible, otherwise notify the delegate to show an alert
+    ///
+    /// - parameter decimalText: The point for our decimal number
     func addDecimal(decimalText: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new operation")
@@ -103,6 +151,9 @@ final class Calculator {
         }
     }
     
+    /// Add an operator to the expression if possible otherwise notify the controller to show an alert
+    ///
+    /// - parameter newOperator: The operator we want to add to the expression
     func addOperator(newOperator: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new operation")
@@ -117,34 +168,8 @@ final class Calculator {
         }
     }
     
-    private func convertElementArray(array: [String]) -> [String] {
-        var newArray = [String]()
-        for element in array {
-            if let decimal = Double(element) {
-                newArray.append("\(decimal)")
-            } else {
-                newArray.append(element)
-            }
-        }
-        return newArray
-    }
-    
-    /// This method is used to perform the operation requested by the user
-    private func performOperation() {
-        let newElements = convertElementArray(array: elements)
-        let newExpression = newElements.joined(separator: " ")
-        let expression = NSExpression(format: newExpression)
-        
-        guard let resultat = expression.expressionValue(with: nil, context: nil) as? Double else { return }
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 3
-        guard let value = formatter.string(from: NSNumber(value: resultat)) else { return }
-        elements = []
-        elements.insert(value, at: 0)
-        
-    }
-    
+
+    /// Add an equal sign into the expression and to perform the operation
     func addEqual() {
         if canAddOperator == false {
             delegate?.showAlert(title: "Zero!", message: "Expression is not correct")
