@@ -55,143 +55,159 @@ class CalculatorTestClass: XCTestCase {
         XCTAssertTrue(calculator.expressionHaveResult(text: testString))
     }
     
-    func testGivenString_WhenLastElementIsNotPlusOrMinus_ThenElementIsValid() {
-        let testString: String = "4 + 2"
+    func testGivenExpression1Plus_WhenAdding1_ThenExpressionIs1Plus1() {
+        let testString = "1 +"
         
         calculator.fillElementWith(text: testString)
+        calculator.addNumber(number: "1")
         
-        XCTAssertTrue(calculator.expressionIsCorrect)
+        XCTAssert(calculator.elements == ["1", "+", "1"])
     }
     
-    func testGivenString_WhenLastElementIsPlus_thenElementIsNotValid() {
-        let testString: String = "4 + 3 +"
+    func testGivenExpression1_WhenAddingPlus_ThenExpressionIs1Plus() {
+        let testString = "1"
         
         calculator.fillElementWith(text: testString)
+        calculator.addOperator(newOperator: "+")
         
-        XCTAssertFalse(calculator.expressionIsCorrect)
+        XCTAssert(calculator.elements == ["1", "+"])
     }
     
-    func testGivenString_WhenLastElementIsMinus_thenElementIsNotValid() {
-        let testString: String = "4 + 3 -"
+    func testGivenNoExpression_WhenStartingWithMinus_ThenExpresionIsValid() {
+        calculator.addOperator(newOperator: "-")
+        
+        XCTAssert(calculator.elements == ["-"])
+    }
+    
+    func testGivenNoExpression_WhenStartingWithPlus_ThenExpresionIsNotValid() {
+        calculator.addOperator(newOperator: "+")
+        
+        XCTAssert(calculator.elements == [])
+    }
+    
+    func testGivenNoExpression_WhenStartingWithDot_ThenExpressionIsValid() {
+        calculator.addDecimal(decimalText: ".")
+        
+        XCTAssert(calculator.elements == ["."])
+    }
+    
+    func testGivenExpressionIs1Plus_WhenAddingMinus5_ThenResultIs1PlusMinus5() {
+        let testString = "1 +"
         
         calculator.fillElementWith(text: testString)
+        calculator.addOperator(newOperator: "-")
+        calculator.addNumber(number: "5")
         
-        XCTAssertFalse(calculator.expressionIsCorrect)
+        XCTAssert(calculator.elements == ["1", "+", "-5"])
     }
     
-    func testGivenString_WhenLastElementIsMultiply_thenElementIsNotValid() {
-        let testString: String = "4 + 3 *"
+    func testGivenNoExpression_WhenAddingMinus5PlusMinus5_ThenResultIsMinus5PlusMinus5() {
+        
+        calculator.addOperator(newOperator: "-")
+        calculator.addNumber(number: "5")
+        calculator.addOperator(newOperator: "+")
+        calculator.addOperator(newOperator: "-")
+        calculator.addNumber(number: "5")
+        
+        XCTAssert(calculator.elements == ["-5", "+", "-5"])
+    }
+    
+    func testGivenExpression1Plus1Equal2_WhenAddingOperator_ThenExpressionIsReset() {
+        let testString = "1 + 1 = 2"
         
         calculator.fillElementWith(text: testString)
+        calculator.addOperator(newOperator: "+")
         
-        XCTAssertFalse(calculator.expressionIsCorrect)
+        XCTAssert(calculator.elements == [])
     }
     
-    func testGivenString_WhenLastElementIsDivide_thenElementIsNotValid() {
-        let testString: String = "4 + 3 /"
+    func testGivenExpression1Plus1Equal2_WhenAdding1_ThenExpressionIsReset() {
+        let testString = "1 + 1 = 2"
         
         calculator.fillElementWith(text: testString)
+        calculator.addNumber(number: "1")
         
-        XCTAssertFalse(calculator.expressionIsCorrect)
+        XCTAssert(calculator.elements == [])
     }
     
-    func testGivenExpressionIs2minus2_WhenSubstractingNumbers_ThenResultIs0() {
-        let testString: String = "2 - 2"
+    func testGivenExpression1Plus1Equal2_WhenAddingDot_ThenExpressionIsReset() {
+        let testString = "1 + 1 = 2"
         
         calculator.fillElementWith(text: testString)
-        calculator.performOperation()
+        calculator.addDecimal(decimalText: ".")
         
-        XCTAssert(calculator.elements[0] == "0.0")
+        XCTAssert(calculator.elements == [])
     }
     
-    func testGivenExpressionIs2Plus2Plus2_WhenAddingNumbers_ThenResultIs6() {
-        let testString: String = "2 + 2 + 2"
+    func testGivenExpression1Plus1PointZeroFive_WhenAddingDot_ThenExpressionIsNotCorrect() {
+        let testString = "1 + 1.05"
         
         calculator.fillElementWith(text: testString)
-        calculator.performOperation()
+        calculator.addDecimal(decimalText: ".")
         
-        XCTAssert(calculator.elements[0] == "6.0")
+        XCTAssert(calculator.elements == ["1", "+", "1.05"])
     }
     
-    func testGivenExpression2Times2_WhenMultipliyingNumber_ThenResultIs4() {
-        let testString: String = "2 * 2"
+    func testGivenExpression1Plus1_WhenAddingDot_ThenExpressionIs1Plus1Point() {
+        let testString = "1 + 1"
         
         calculator.fillElementWith(text: testString)
-        calculator.performOperation()
+        calculator.addDecimal(decimalText: ".")
         
-        XCTAssert(calculator.elements[0] == "4.0")
+        XCTAssert(calculator.elements == ["1", "+", "1."])
     }
     
-    func testGivenExpression2Plus2Time3_WhenCheckingPriority_ThenResultIsTrue3() {
-        let testString = "2 + 2 * 3"
+    func testGivenExpression1Plus1_WhenAddingEqual_ThenResultIs2() {
+        let testString = "1 + 1"
         
         calculator.fillElementWith(text: testString)
+        calculator.addEqual()
         
-        XCTAssert(calculator.expressionPriority() == (3, true))
+        XCTAssert(calculator.elements == ["2"])
     }
     
-    func testGivenExpression2Plus4Times4Plus3_WhenCalculating_ThenResultIs21() {
-        let testString: String = "2 + 4 * 4 + 3"
+    func testGivenExpression1Plus_WhenAddingEqual_ThenResultIs1Plus() {
+        let testString = "1 + "
         
         calculator.fillElementWith(text: testString)
-        calculator.performOperation()
+        calculator.addEqual()
         
-        XCTAssert(calculator.elements[0] == "21.0")
+        XCTAssert(calculator.elements == ["1", "+"])
     }
     
-    func testGivenExpression2Divided0_WhenCalculating_ThenResultIsNotANumber() {
-        let testString = "2 / 0"
+    func testGivenExpression1_WhenAddingEqual_ThenResultIs1() {
+        let testString = "1"
         
         calculator.fillElementWith(text: testString)
-        calculator.performOperation()
+        calculator.addEqual()
         
-        XCTAssert(calculator.elements[0] == "Not a number")
+        XCTAssert(calculator.elements == ["1"])
     }
     
-    func testGivenExpression2Plus2_WhenDeletingLastElement_ThenResulIs2Plus() {
-        let testString = "2 - 2"
+    func testGivenExpression1Plus1_WhenDeletingLastElement_ThenExpressionIs1Plus() {
+        let testString = "1 + 1"
         
         calculator.fillElementWith(text: testString)
         calculator.deleteLastElement()
         
-        XCTAssert(calculator.elements == ["2", "-"])
+        XCTAssert(calculator.elements == ["1", "+"])
     }
     
-    func testGivenExpression2Plus2_WhenDeletingAndAdding4_ThenResultIs2Plus4() {
-        let testString = "2 + 2"
-        
-        calculator.fillElementWith(text: testString)
-        calculator.deleteLastElement()
-        calculator.elements.append("4")
-        XCTAssert(calculator.elements == ["2", "+", "4"])
-    }
-    
-    func testGivenExpression2Plus2_WhenDeletingAllElement_ThenResulIsEmpty() {
-        let testString = "2 + 2"
+    func testGivenExpression1Plus1_WhenDeletingLastElement_ThenExpressionIsEmpty() {
+        let testString = "1 + 1"
         
         calculator.fillElementWith(text: testString)
         calculator.deleteAllElements()
         
-        XCTAssert(calculator.elements.isEmpty)
+        XCTAssert(calculator.elements == [])
     }
     
-    func testGivenExpression2DividedBy0_WhenCalculating_ThenResultIsNotANumber() {
-        let testString = "2 / 0"
+    func testGivenExpression1Plus1Equal2_WhenDeletingLastElement_ThenExpressionIs1Plus1Equal2() {
+        let testString = "1 + 1 = 2"
         
         calculator.fillElementWith(text: testString)
+        calculator.addEqual()
         
-        calculator.performOperation()
-        
-        XCTAssert(calculator.elements[0] == "Not a number")
-    }
-    
-    func testGivenExpression2DividedBy2_WhenCalculating_ThenResultIsOne() {
-        let testString = "2 / 2"
-        
-        calculator.fillElementWith(text: testString)
-        
-        calculator.performOperation()
-        
-        XCTAssert(calculator.elements[0] == "1.0")
+        XCTAssert(calculator.elements == ["1", "+", "1", "=", "2"])
     }
 }

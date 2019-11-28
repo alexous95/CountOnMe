@@ -27,7 +27,6 @@ final class ViewController: UIViewController {
         super.viewDidLoad()
         calculator.delegate = self
         textView.isEditable = false
-        //updateCalculator()
     }
     
     // MARK: - PRIVATE FUNC

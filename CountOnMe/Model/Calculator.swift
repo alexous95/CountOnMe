@@ -29,12 +29,12 @@ final class Calculator {
     private var isDecimal = false
     
     /// Check the number of items in the elements array
-    private var expressionHaveEnoughElement: Bool {
+    var expressionHaveEnoughElement: Bool {
         return elements.count >= minElement
     }
     
     /// Check if we can add an operand to the elements array
-    private var canAddOperator: Bool {
+    var canAddOperator: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
     }
     
@@ -61,15 +61,7 @@ final class Calculator {
         if newOperator == "-" {
             return true
         }
-        return elements.last != "+" && elements.last != "*" && elements.last != "/"
-    }
-    
-    /// This method is used to check if the expression entered by the user have an equal sign
-    ///
-    /// - parameter text: A string wich contains our operation
-    /// - returns: ' True ' if the expression have an equal sign
-    private func expressionHaveResult(text: String) -> Bool {
-        return text.firstIndex(of: "=") != nil
+        return elements.last != "+" && elements.last != "*" && elements.last != "/" && elements.isEmpty == false
     }
     
     /// This method is used to convert our number in the string array into double. With this method we avoid he fact that the NSExpression returns only Int result even when working with divisions
@@ -97,7 +89,7 @@ final class Calculator {
         guard let resultat = expression.expressionValue(with: nil, context: nil) as? Double else { return }
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 3
+        formatter.maximumFractionDigits = 5
         guard let value = formatter.string(from: NSNumber(value: resultat)) else { return }
         elements = []
         elements.insert(value, at: 0)
@@ -105,6 +97,14 @@ final class Calculator {
     }
     
     // - MARK: FUNCTIONS
+    
+    /// This method is used to check if the expression entered by the user have an equal sign
+    ///
+    /// - parameter text: A string wich contains our operation
+    /// - returns: ' True ' if the expression have an equal sign
+    func expressionHaveResult(text: String) -> Bool {
+        return text.firstIndex(of: "=") != nil
+    }
     
     /// This method is used to split the text in parameter and add it to the elements array
     ///
@@ -141,12 +141,14 @@ final class Calculator {
             delegate?.resetTextView()
             elements = []
         } else if canAddDecimal(array: elements) == false {
-            delegate?.showAlert(title: "Zero", message: "There is already a dot")
+            delegate?.showAlert(title: "Zero!", message: "There is already a dot")
         } else {
             isDecimal = !isDecimal
             delegate?.updateTextViewWith(text: "\(decimalText)")
             if let last = elements.last {
                 elements[elements.count - 1] = last + decimalText
+            } else {
+                elements.append(decimalText)
             }
         }
     }
@@ -164,17 +166,18 @@ final class Calculator {
             delegate?.updateTextViewWith(text: " \(newOperator) ")
             elements.append(newOperator)
         } else {
-            delegate?.showAlert(title: "Zero!", message: "There is already an operator")
+            delegate?.showAlert(title: "Zero!", message: "You can't add an operator here")
         }
     }
     
-
-    /// Add an equal sign into the expression and to perform the operation
+    /// Add an equal sign to the expression and perform the operation
     func addEqual() {
         if canAddOperator == false {
             delegate?.showAlert(title: "Zero!", message: "Expression is not correct")
         } else if expressionHaveEnoughElement == false {
-            delegate?.showAlert(title: "Zero!", message: "Expression is not correct")
+            delegate?.showAlert(title: "Zero!", message: "Expression doesn't have enought elements")
+        } else if expressionHaveResult(text: elements.joined(separator: " ")) {
+            delegate?.showAlert(title: "Zero!", message: "Expression already has an equal sign")
         } else {
             performOperation()
             if let first = elements.first {
