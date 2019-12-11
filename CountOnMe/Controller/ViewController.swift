@@ -47,7 +47,7 @@ final class ViewController: UIViewController {
         }
         
         updateCalculator()
-        calculator.addNumber(number: numberText)
+        calculator.addNumber(numberText)
     }
     
     /// This action is called when an operator buttons is pressed
@@ -58,7 +58,7 @@ final class ViewController: UIViewController {
             return
         }
         updateCalculator()
-        calculator.addOperator(newOperator: operatorText)
+        calculator.addOperator(operatorText)
       
     }
     
@@ -96,13 +96,13 @@ final class ViewController: UIViewController {
         guard let decimalText = sender.title(for: .normal) else {
             return
         }
-        calculator.addDecimal(decimalText: decimalText)
+        calculator.addDecimal(text: decimalText)
         updateCalculator()
     }
 }
 
 extension ViewController: ShowAlertDelegate {
-    func updateTextViewWith(text: String) {
+    func updateTextView(with text: String) {
         textView.text.append(text)
     }
     

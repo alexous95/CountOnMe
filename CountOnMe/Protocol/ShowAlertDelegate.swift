@@ -10,6 +10,6 @@ import Foundation
 
 protocol ShowAlertDelegate: class {
     func showAlert(title: String, message: String)
-    func updateTextViewWith(text: String)
+    func updateTextView(with text: String)
     func resetTextView()
 }

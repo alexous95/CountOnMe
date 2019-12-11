@@ -94,6 +94,10 @@ final class Calculator {
         elements = []
         elements.insert(value, at: 0)
         
+        if elements[0] == "+∞" || elements[0] == "-∞" {
+            elements[0] = "Error div by zero"
+        }
+        
     }
     
     // - MARK: FUNCTIONS
@@ -116,26 +120,26 @@ final class Calculator {
     /// Add a number to the expression if possible, otherwise notify the controller to show an alert
     ///
     /// - parameter number: The number to add
-    func addNumber(number: String) {
+    func addNumber(_ number: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new Operation")
             delegate?.resetTextView()
             elements = []
         } else if isDecimal == false {
-            delegate?.updateTextViewWith(text: "\(number)")
+            delegate?.updateTextView(with: "\(number)")
             elements.append(number)
         } else {
             if let last = elements.last {
                 elements[elements.count - 1] = last + number
-                delegate?.updateTextViewWith(text: "\(number)")
+                delegate?.updateTextView(with: "\(number)")
             }
         }
     }
     
     /// Add a dot to the expression if possible, otherwise notify the delegate to show an alert
     ///
-    /// - parameter decimalText: The point for our decimal number
-    func addDecimal(decimalText: String) {
+    /// - parameter text: The point for our decimal number
+    func addDecimal(text: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new operation")
             delegate?.resetTextView()
@@ -144,11 +148,11 @@ final class Calculator {
             delegate?.showAlert(title: "Zero!", message: "There is already a dot")
         } else {
             isDecimal = !isDecimal
-            delegate?.updateTextViewWith(text: "\(decimalText)")
+            delegate?.updateTextView(with: "\(text)")
             if let last = elements.last {
-                elements[elements.count - 1] = last + decimalText
+                elements[elements.count - 1] = last + text
             } else {
-                elements.append(decimalText)
+                elements.append(text)
             }
         }
     }
@@ -156,14 +160,14 @@ final class Calculator {
     /// Add an operator to the expression if possible otherwise notify the controller to show an alert
     ///
     /// - parameter newOperator: The operator we want to add to the expression
-    func addOperator(newOperator: String) {
+    func addOperator(_ newOperator: String) {
         if expressionHaveResult(text: elements.joined(separator: " ")) {
             delegate?.showAlert(title: "Zero!", message: "Start a new operation")
             delegate?.resetTextView()
             elements = []
         } else if canAddMinus(newOperator: newOperator) {
             isDecimal = !isDecimal
-            delegate?.updateTextViewWith(text: " \(newOperator) ")
+            delegate?.updateTextView(with: " \(newOperator) ")
             elements.append(newOperator)
         } else {
             delegate?.showAlert(title: "Zero!", message: "You can't add an operator here")
@@ -181,7 +185,7 @@ final class Calculator {
         } else {
             performOperation()
             if let first = elements.first {
-                delegate?.updateTextViewWith(text: " = \(first)")
+                delegate?.updateTextView(with: " = \(first)")
             }
             isDecimal = false
         }
@@ -190,13 +194,13 @@ final class Calculator {
     /// Delete the last element of the array
     func deleteLastElement() {
         if !elements.isEmpty {
-            elements.removeLast()
+            elements.remove(at: elements.count - 1)
+            isDecimal = false
         }
     }
     
     func deleteAllElements() {
-        if !elements.isEmpty {
-            elements.removeAll()
-        }
+        elements = []
+        isDecimal = false
     }
 }
